@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -55,18 +56,18 @@ public class OrderTest {
     public void compareTo() {
         //test lombok
         List<Order> list = Arrays.asList(
-                Order.builder().userId("user1").type(BUY).quantity(5.5).build(),
-                Order.builder().userId("user2").type(BUY).quantity(4.5).build(),
-                Order.builder().userId("user3").type(BUY).quantity(5.5).build(),
-                Order.builder().userId("user4").type(BUY).quantity(6.5).build(),
+                Order.builder().userId("user1").type(BUY).quantity(5.5).price(new BigDecimal("55.00")).build(),
+                Order.builder().userId("user2").type(BUY).quantity(4.5).price(new BigDecimal("45.00")).build(),
+                Order.builder().userId("user3").type(BUY).quantity(5.5).price(new BigDecimal("55.00")).build(),
+                Order.builder().userId("user4").type(BUY).quantity(6.5).price(new BigDecimal("65.00")).build(),
 
-                Order.builder().userId("user8").type(SELL).quantity(15.5).build(),
-                Order.builder().userId("user5").type(SELL).quantity(14.5).build(),
-                Order.builder().userId("user6").type(SELL).quantity(15.5).build(),
-                Order.builder().userId("user7").type(SELL).quantity(16.5).build()
+                Order.builder().userId("user8").type(SELL).quantity(15.5).price(new BigDecimal("155.00")).build(),
+                Order.builder().userId("user5").type(SELL).quantity(14.5).price(new BigDecimal("145.00")).build(),
+                Order.builder().userId("user6").type(SELL).quantity(15.5).price(new BigDecimal("155.00")).build(),
+                Order.builder().userId("user7").type(SELL).quantity(16.5).price(new BigDecimal("165.00")).build()
 
         );
-        Collections.sort(list, new OrderComparator());
+        list.sort(new OrderComparator());
         list.forEach(o -> {
             o.setId(UUID.randomUUID().toString());
             log.info(o.getUserId() + ", hash" + o.hashCode());
