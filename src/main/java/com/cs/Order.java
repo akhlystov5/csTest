@@ -8,10 +8,9 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode//(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class Order {
 
-    //we presume we are going to meaningfully use only object with ID generated
     @EqualsAndHashCode.Exclude
     String id;
 
