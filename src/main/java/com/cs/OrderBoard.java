@@ -47,7 +47,7 @@ public class OrderBoard {
     //*depending on usage/(contract we want to provide to the users)
     // we can clone the original set or do deep clone of the objects in it as well
     //* make sure objects don't escape. clone them or something
-    public Collection<Order> getSummary() {
+    public List<Order> getSummary() {
         List<Order> list = new ArrayList<>();
         //deep copy of objects so clients have read-only version, can't break the master storage
         collection.values().forEach(order -> list.add(new Order(order)));

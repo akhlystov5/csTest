@@ -68,14 +68,33 @@ public class OrderBoardTest {
 
         list.forEach(o -> board.registerOrder(o));
 
-        Collection<Order> summary = board.getSummary();
-        Assert.assertEquals(12, summary.size());
+        List<Order> summary = board.getSummary();
 
         List<String> sortedValues = summary.stream().map(order -> order.getType() + ":" + order.getPrice()).collect(Collectors.toList());
         log.info("sorted values" + sortedValues);
         assertEquals("[SELL:16.00, SELL:145.00, SELL:155.00, SELL:155.00, SELL:165.00, SELL:200.00, " +
                         "BUY:800.00, BUY:65.00, BUY:55.00, BUY:55.00, BUY:45.00, BUY:8.00]",
                 sortedValues.toString());
+
+        //test deep copy. update
+        List<Order> list1 = summary.stream().filter(order -> order.getUserId().equals("user1")).collect(Collectors.toList());
+        assertEquals(1, list1.size());
+        Order boardOrder1 = list1.get(0);
+        boardOrder1.setPrice("24.00");
+        boardOrder1.setQuantity(19d);
+        boardOrder1.setType(SELL);
+
+        summary = board.getSummary();
+        List<Order> list2 = summary.stream().filter(order -> order.getUserId().equals("user1")).collect(Collectors.toList());
+        assertEquals(1, list2.size());
+        Order boardOrder2 = list2.get(0);
+
+        Assert.assertEquals(new BigDecimal("55.00"), boardOrder2.getPrice());
+        Assert.assertEquals(5.5, boardOrder2.getQuantity(), 0.000002d);
+        Assert.assertEquals(BUY, boardOrder2.getType());
+
+        //test deep copy. removal
+        Assert.assertEquals(12, summary.size());
         summary.remove(user1);
         Assert.assertEquals(11, summary.size());
         Assert.assertEquals(12, board.getSummary().size());
