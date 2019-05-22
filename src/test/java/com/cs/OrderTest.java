@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.cs.OrderType.BUY;
 import static com.cs.OrderType.SELL;
@@ -30,10 +31,10 @@ public class OrderTest {
     }
 
     @Test
-    public void standard() {
+    public void testEqualsHashcode() {
         //test lombok
         Order order = new Order();
-        order.setUserId("user1");
+        order.setUserId("user2");
 
         Order order2 = new Order();
         order2.setUserId("user2");
@@ -43,18 +44,17 @@ public class OrderTest {
         log.info(""+order.hashCode());
         order.setId(UUID.randomUUID().toString());
         log.info("order1 ="+order.hashCode());
-        assertEquals("user1", order.getUserId());
+        assertEquals("user2", order.getUserId());
 
         order2.setId(UUID.randomUUID().toString());
         log.info("order2 ="+order2.hashCode());
 
-        assertNotEquals(order, order2);
+        assertEquals(order, order2);
 
     }
 
     @Test
-    public void compareTo() {
-        //test lombok
+    public void testComparator() {
         List<Order> list = Arrays.asList(
                 Order.builder().userId("user1").type(BUY).quantity(5.5).price(new BigDecimal("55.00")).build(),
                 Order.builder().userId("user2").type(BUY).quantity(4.5).price(new BigDecimal("45.00")).build(),
@@ -68,12 +68,11 @@ public class OrderTest {
 
         );
         list.sort(new OrderComparator());
+        assertEquals("[user5, user8, user6, user7, user4, user1, user3, user2]",list.stream().map(Order::getUserId).collect(Collectors.toList()).toString());
         list.forEach(o -> {
             o.setId(UUID.randomUUID().toString());
             log.info(o.getUserId() + ", hash" + o.hashCode());
         });
-//        System.out.println(list);
         log.info(list.toString());
-        //TODO test the order of orders is right
     }
 }

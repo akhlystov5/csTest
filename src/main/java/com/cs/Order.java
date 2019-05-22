@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 @EqualsAndHashCode//(onlyExplicitlyIncluded = true)
 public class Order {
 
-    //TODO check and remove this bit - we presume we are going to meaningfully use only object with ID generated
-//    @EqualsAndHashCode.Exclude
+    //we presume we are going to meaningfully use only object with ID generated
+    @EqualsAndHashCode.Exclude
     String id;
 
     String userId;
@@ -24,9 +24,6 @@ public class Order {
     /** in GBP */
     BigDecimal price;
 
-    void setPrice(String price) {
-        this.price = new BigDecimal(price);
-    }
     //clonning constructor
     public Order(Order order) {
         //TODO check that all assigments are by value
