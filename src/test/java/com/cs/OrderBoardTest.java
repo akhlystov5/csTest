@@ -19,17 +19,16 @@ public class OrderBoardTest {
     OrderBoard board = new OrderBoard();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         board = new OrderBoard();
     }
 
     @Test
-    public void testAddRemove() throws Exception {
-        //TODO check BigDecimal scale to be 2
+    public void testAddRemove() {
         Order order = Order.builder().userId("user1").type(BUY).quantity(5.5).
                 price(new BigDecimal("300.00")).build();
         Assert.assertEquals(0, board.getSummary().size());
@@ -71,7 +70,6 @@ public class OrderBoardTest {
 
         List<Order> summary = board.getSummary();
         log.info("summary=" + summary);
-//        List<String> sortedValues = summary.stream().map(order -> order.getType() + ":" + order.getPrice()).collect(Collectors.toList());
         List<String> sortedValues = summary.stream().map(order -> order.getType() + ":" + order.getQuantity() + " kg for £"+ order.getPrice()
         + " // " + order.getUserId()).collect(Collectors.toList());
 

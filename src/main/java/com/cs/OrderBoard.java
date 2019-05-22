@@ -3,12 +3,11 @@ package com.cs;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -20,24 +19,18 @@ import static java.util.stream.Collectors.groupingBy;
 public class OrderBoard {
 
 
-    /** optimised collection for concurrent reads
-     * another option is CopyOnWriteArrayList - it depends on usage pattern
-     * */
-//    private final ConcurrentSkipListMap<String, Order> collection = new ConcurrentSkipListMap<>();
-//    private final ConcurrentSkipListSet<Order> collection = new ConcurrentSkipListSet<Order>();
-//    private final Set<Order> collection = new TreeSet<>(new OrderComparator());
-//    private final Set<Order> collection = new HashSet<Order>();
-//    private final Map<String, Order> collection = new HashMap<>();
+    /**
+     * optimised collection for concurrent use. other collections could benefit with other aspects like performance.
+     */
     private ConcurrentHashMap<String, Order> collection = new ConcurrentHashMap<>();
 
     /**
-     *
      * @param newOrder, id is generated inside
      * @return new order id
      */
     public String registerOrder(Order newOrder) {
-        //I presume client is not modifying order after registered, otherwise we can clone it
-        //presume UUID is unique
+        //I presume client is not modifying order after registered, otherwise we can clone it.
+        // I presume UUID is unique
         newOrder.setId(UUID.randomUUID().toString());
         collection.put(newOrder.getId(), newOrder);
         log.info("registered " + newOrder);
@@ -54,26 +47,19 @@ public class OrderBoard {
     public List<Order> getSummary() {
         List<Order> list = new ArrayList<>();
         //deep copy of objects so clients have read-only version, can't break the master storage
-//        collection.values().forEach(order -> list.add(new Order(order)));
 
-    Map<BigDecimal,List<Order>> map = collection.values().stream().collect(groupingBy(Order::getPrice));
-//    log.info("map=" + map);
-    map.forEach((bigDecimal, orders) -> {
-        if (orders.size() == 1) {
-            list.add(new Order(orders.get(0)));
-        } else {
-            list.add(new GroupedOrder(orders));
-        }
-    });
+        Map<BigDecimal, List<Order>> map = collection.values().stream().collect(groupingBy(Order::getPrice));
+        map.forEach((bigDecimal, orders) -> {
+            if (orders.size() == 1) {
+                list.add(new Order(orders.get(0)));
+            } else {
+                list.add(new GroupedOrder(orders.stream().map(Order::new).collect(Collectors.toList())));
+            }
+        });
 
-
-                //        List<Order> duplicates = map.entrySet().stream().filter(e -> e.getValue().size() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
-//        log.info("duplicates=" + duplicates);
-//        List<Order> list = collection.values().stream().map(Order::new).collect(Collectors.toList());
         list.sort(new OrderComparator());
 
         return list;
-//        return collection.values();
     }
     //trade off is that new collection is created and sorted every time, although it can be cached/made thread safe
 

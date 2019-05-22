@@ -18,17 +18,8 @@ import static com.cs.OrderType.BUY;
 import static com.cs.OrderType.SELL;
 import static org.junit.Assert.*;
 
-@Slf4j //TODO sort logging. it is not picking up the logback.xml config
+@Slf4j
 public class OrderTest {
-
-//    private static final Logger log = LoggerFactory.getLogger(OrderTest.class);
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void testEqualsHashcode() {
@@ -50,7 +41,6 @@ public class OrderTest {
         log.info("order2 ="+order2.hashCode());
 
         assertEquals(order, order2);
-
     }
 
     @Test

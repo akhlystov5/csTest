@@ -21,12 +21,12 @@ public class Order {
     /** in kg */
     Double quantity;
 
+    //TODO check BigDecimal scale to be 2
     /** in GBP */
     BigDecimal price;
 
     //clonning constructor
     public Order(Order order) {
-        //TODO check that all assigments are by value
         id = order.getId();
         userId = order.getUserId();
         type = order.getType();
