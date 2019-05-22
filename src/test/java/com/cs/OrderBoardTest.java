@@ -71,7 +71,11 @@ public class OrderBoardTest {
         Collection<Order> summary = board.getSummary();
         Assert.assertEquals(12, summary.size());
 
-        log.info("sorted values" + summary.stream().map(order -> order.getType() + ":" + order.getPrice()).collect(Collectors.toList()).toString());
+        List<String> sortedValues = summary.stream().map(order -> order.getType() + ":" + order.getPrice()).collect(Collectors.toList());
+        log.info("sorted values" + sortedValues);
+        assertEquals("[SELL:16.00, SELL:145.00, SELL:155.00, SELL:155.00, SELL:165.00, SELL:200.00, " +
+                        "BUY:800.00, BUY:65.00, BUY:55.00, BUY:55.00, BUY:45.00, BUY:8.00]",
+                sortedValues.toString());
         summary.remove(user1);
         Assert.assertEquals(11, summary.size());
         Assert.assertEquals(12, board.getSummary().size());
