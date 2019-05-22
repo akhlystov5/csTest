@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
+ * this is thread safe implementation
  * I presume we can't have orders with the same user, price, type and quantity (for simplicity)
  */
 @Slf4j
@@ -22,7 +23,7 @@ public class OrderBoard {
     /**
      * optimised collection for concurrent use. other collections could benefit with other aspects like performance.
      */
-    private ConcurrentHashMap<String, Order> collection = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Order> collection = new ConcurrentHashMap<>();
 
     /**
      * @param newOrder, id is generated inside
@@ -45,7 +46,7 @@ public class OrderBoard {
     // we can clone the original set or do deep clone of the objects in it as well for thread-safe use.
     //* I am making sure objects don't escape by cloning them.
     public List<Order> getSummary() {
-        List<Order> list = new ArrayList<>();
+        final List<Order> list = new ArrayList<>();
         //deep copy of objects so clients have read-only version, can't break the master storage
 
         Map<BigDecimal, List<Order>> map = collection.values().stream().collect(groupingBy(Order::getPrice));
