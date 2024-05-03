@@ -5,7 +5,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cs.test</groupId>
-    <artifactId>my-app</artifactId>
+    <artifactId>cs-test-task</artifactId>
     <version>1.0</version>
     <build>
         <plugins>
